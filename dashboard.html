@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BNG OTP Portal - Remote Upload</title>
+    <style>
+        :root {
+            --primary: #008577;
+            --bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background: var(--bg);
+            color: #333;
+        }
+
+        .nav {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .upload-zone {
+            border: 2px dashed #ccc;
+            padding: 3rem;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: #f0fdfa;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        select {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+            margin-top: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .pricing-table {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: #666;
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+        }
+
+        #pin-result {
+            display: none;
+            margin-top: 2rem;
+            text-align: center;
+            padding: 2rem;
+            background: #e6fffa;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+        }
+
+        .pin-code {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: 5px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="nav">
+        <div style="font-weight: 900; color: var(--primary); font-size: 1.5rem;">BNG WantToPrint</div>
+        <div style="font-size: 0.9rem;">Welcome, <b>Aris</b> | <a href="#" style="color:red">Logout</a></div>
+    </div>
+
+    <div class="container" id="upload-stage">
+        <h1>Cloud Upload</h1>
+        <p>Register your document and get your unique Release PIN.</p>
+
+        <div class="upload-zone" onclick="document.getElementById('file').click()">
+            <input type="file" id="file" hidden>
+            <div style="font-size: 3rem;">📄</div>
+            <b>Click to upload or drag & drop</b>
+            <p>PDF, DOCX, JPG allowed (Max 50MB)</p>
+        </div>
+
+        <div class="options">
+            <div class="option-group">
+                <label>Paper Size</label>
+                <select id="size">
+                    <option value="A4">A4 (Standard)</option>
+                    <option value="A3">A3 (Large)</option>
+                </select>
+            </div>
+            <div class="option-group">
+                <label>Color Mode</label>
+                <select id="color">
+                    <option value="BW">Black & White</option>
+                    <option value="Color">Full Color</option>
+                </select>
+            </div>
+            <div class="option-group">
+                <label>Sides</label>
+                <select id="sides">
+                    <option value="Single">Single-Sided</option>
+                    <option value="Double">Double-Sided</option>
+                </select>
+            </div>
+            <div class="option-group">
+                <label>Copies</label>
+                <input type="number" value="1" style="padding: 9px; border-radius: 6px; border: 1px solid #ddd;">
+            </div>
+        </div>
+
+        <div class="pricing-table">
+            <b>Live Pricing:</b> A4 B/W: $0.05 | A4 Color: $0.30 | A3 B/W: $0.10 | A3 Color: $0.60
+        </div>
+
+        <button class="btn btn-primary" onclick="generatePin()">UPLOAD & GENERATE PIN</button>
+    </div>
+
+    <div class="container" id="pin-result">
+        <h2 style="margin: 0;">Upload Successful!</h2>
+        <p>Your document is ready in the cloud. Walk to any printer and enter this code:</p>
+        <div class="pin-code">8492</div>
+        <p style="color: #666; font-size: 0.8rem;"><i>This code expires in 24 hours. Estimated cost: $0.05</i></p>
+        <button class="btn" style="background: #eee;" onclick="location.reload()">Upload Another</button>
+    </div>
+
+    <script>
+        function generatePin() {
+            document.getElementById('upload-stage').style.display = 'none';
+            document.getElementById('pin-result').style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>

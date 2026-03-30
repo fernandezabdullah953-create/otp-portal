@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Want to Print - MFP Portal</title>
+    <style>
+        :root {
+            --primary: #008577;
+            /* PaperCut-style Teal */
+            --bg: #f4f4f4;
+            --text: #333;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--white);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .user-info {
+            font-size: 18px;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .job-list {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            overflow-y: auto;
+        }
+
+        .job-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .job-item:last-child {
+            border-bottom: none;
+        }
+
+        .job-details h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .job-details p {
+            margin: 5px 0 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(1.0);
+            background: #eee;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #eee;
+            color: #333;
+        }
+
+        .btn-danger {
+            background-color: #d32f2f;
+            color: white;
+        }
+
+        /* Login Overlay */
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .pin-input {
+            font-size: 40px;
+            letter-spacing: 15px;
+            text-align: center;
+            padding: 20px;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            width: 250px;
+            margin-bottom: 30px;
+        }
+
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            gap: 15px;
+        }
+
+        .num-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 40px;
+            border: 1px solid #ccc;
+            background: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .num-btn:active {
+            background: #eee;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">Want to Print</div>
+        <div class="user-info" id="user-display">Guest User</div>
+    </header>
+
+    <main id="main-content" style="display: none;">
+        <div class="job-list">
+            <div class="job-item">
+                <div class="job-details">
+                    <h3>Report_Q1_Final.pdf (A4 BW)</h3>
+                    <p>Submited at 10:25 AM • 12 Pages • <b>$0.60</b></p>
+                </div>
+                <input type="checkbox" checked style="width: 30px; height: 30px;">
+            </div>
+            <div class="job-item">
+                <div class="job-details">
+                    <h3>Legal_Contract_v2.docx (A4 Color)</h3>
+                    <p>Submited at 10:45 AM • 2 Pages • <b>$0.60</b></p>
+                </div>
+                <input type="checkbox" checked style="width: 30px; height: 30px;">
+            </div>
+        </div>
+        <div class="actions">
+            <button class="btn btn-primary" onclick="alert('Printing... Total Cost: $1.20')">PRINT SELECTED</button>
+            <button class="btn btn-secondary" onclick="location.reload()">REFRESH</button>
+            <button class="btn btn-danger" onclick="logout()">LOGOUT</button>
+        </div>
+    </main>
+
+    <div id="login-overlay">
+        <h2>Enter Release PIN</h2>
+        <input type="password" class="pin-input" id="pin" readonly>
+        <div class="numpad">
+            <button class="num-btn" onclick="addNum(1)">1</button>
+            <button class="num-btn" onclick="addNum(2)">2</button>
+            <button class="num-btn" onclick="addNum(3)">3</button>
+            <button class="num-btn" onclick="addNum(4)">4</button>
+            <button class="num-btn" onclick="addNum(5)">5</button>
+            <button class="num-btn" onclick="addNum(6)">6</button>
+            <button class="num-btn" onclick="addNum(7)">7</button>
+            <button class="num-btn" onclick="addNum(8)">8</button>
+            <button class="num-btn" onclick="addNum(9)">9</button>
+            <button class="num-btn" onclick="clearPin()">C</button>
+            <button class="num-btn" onclick="addNum(0)">0</button>
+            <button class="num-btn" onclick="submitPin()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        let pin = '';
+        function addNum(n) {
+            if (pin.length < 4) {
+                pin += n;
+                document.getElementById('pin').value = pin;
+            }
+        }
+        function clearPin() {
+            pin = '';
+            document.getElementById('pin').value = '';
+        }
+        function submitPin() {
+            if (pin === '1234') { // Sample PIN
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('main-content').style.display = 'grid';
+                document.getElementById('user-display').innerText = 'Welcome, Lab User';
+            } else {
+                alert('Invalid PIN (Try 1234)');
+                clearPin();
+            }
+        }
+        function logout() {
+            location.reload();
+        }
+    </script>
+</body>
+
+</html>
