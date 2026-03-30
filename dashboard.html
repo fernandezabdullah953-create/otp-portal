@@ -123,54 +123,81 @@
 
     <div class="nav">
         <div style="font-weight: 900; color: var(--primary); font-size: 1.5rem;">BNG WantToPrint</div>
-        <div style="font-size: 0.9rem;">Welcome, <b>Aris</b> | <a href="index.html" style="color:red">Logout</a></div>
+        <div style="font-size: 0.9rem;">Welcome, <b id="userName">User</b> | <a href="index.html" style="color:red"
+                onclick="localStorage.clear()">Logout</a></div>
     </div>
 
     <div class="container" id="upload-stage">
-        <h1>Cloud Upload</h1>
-        <p>Register your document and get your unique Release PIN.</p>
+        <div class="card">
+            <h2 style="margin-top: 0;">Upload Document</h2>
+            <p style="color: #666; font-size: 0.9rem;">Files are stored for <b>7 days</b> and then automatically deleted
+                for security.</p>
 
-        <div class="upload-zone" onclick="document.getElementById('file').click()">
-            <input type="file" id="file" hidden>
-            <div style="font-size: 3rem;">📄</div>
-            <b>Click to upload or drag & drop</b>
-            <p>PDF, DOCX, JPG allowed (Max 50MB)</p>
-        </div>
-
-        <div class="options">
-            <div class="option-group">
-                <label>Paper Size</label>
-                <select id="size">
-                    <option value="A4">A4 (Standard)</option>
-                    <option value="A3">A3 (Large)</option>
-                </select>
-            </div>
-            <div class="option-group">
-                <label>Color Mode</label>
-                <select id="color">
-                    <option value="BW">Black & White</option>
-                    <option value="Color">Full Color</option>
-                </select>
-            </div>
-            <div class="option-group">
-                <label>Sides</label>
-                <select id="sides">
-                    <option value="Single">Single-Sided</option>
-                    <option value="Double">Double-Sided</option>
-                </select>
-            </div>
-            <div class="option-group">
-                <label>Copies</label>
-                <input type="number" value="1" style="padding: 9px; border-radius: 6px; border: 1px solid #ddd;">
+            <div class="upload-zone" id="drop-zone">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">📄</div>
+                <p>Drag & drop your PDF here or <b>browse</b></p>
+                <input type="file" id="file-input" style="display: none;">
+                <p style="font-size: 0.8rem; color: #999;">Supports PDF, DOCX (Max 20MB)</p>
             </div>
         </div>
 
-        <div class="pricing-table">
-            <b>Live Pricing:</b> A4 B/W: $0.05 | A4 Color: $0.30 | A3 B/W: $0.10 | A3 Color: $0.60
+        <div class="card">
+            <h2 style="margin-bottom: 1.5rem;">Your Documents</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Document Name</th>
+                        <th>Type</th>
+                        <th>PIN Code</th>
+                        <th>Expires In</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="job-list">
+                    <tr>
+                        <td>Final_Contract_V2.pdf</td>
+                        <td><span class="badge">A4 - BW</span></td>
+                        <td><code
+                                style="background: #eee; padding: 2px 6px; border-radius: 4px; font-weight: bold;">8492</code>
+                        </td>
+                        <td style="color: #d9534f; font-weight: bold;">6 Days</td>
+                        <td><button
+                                style="border: none; background: none; color: #d9534f; cursor: pointer; text-decoration: underline;">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-
-        <button class="btn btn-primary" onclick="generatePin()">UPLOAD & GENERATE PIN</button>
     </div>
+
+    <script>
+        // Set User Name from Login
+        const storedName = localStorage.getItem('bng_user') || 'User';
+        document.getElementById('userName').textContent = storedName;
+
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const jobList = document.getElementById('job-list');
+
+        dropZone.onclick = () => fileInput.click();
+
+        fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const pin = Math.floor(1000 + Math.random() * 9000);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${file.name}</td>
+                    <td><span class="badge">A4 - BW</span></td>
+                    <td><code style="background: #eee; padding: 2px 6px; border-radius: 4px; font-weight: bold;">${pin}</code></td>
+                    <td style="color: #5cb85c; font-weight: bold;">7 Days</td>
+                    <td><button style="border: none; background: none; color: #d9534f; cursor: pointer; text-decoration: underline;">Delete</button></td>
+                `;
+                jobList.prepend(row);
+                alert("File uploaded! Your PIN to print is: " + pin + "\nNote: File expires in 7 days.");
+            }
+        };
+    </script>
 
     <div class="container" id="pin-result">
         <h2 style="margin: 0;">Upload Successful!</h2>
